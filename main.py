@@ -1,4 +1,4 @@
-from data_sources import HigyrusDataSource, MockDataSource, combine_data_sources, save_to_csv
+from data_sources import HigyrusDataSource, MockDataSource, BeCleverDataSource, combine_data_sources, save_to_csv
 
 
 def consume_data_source(data_source):
@@ -17,7 +17,7 @@ def consume_data_source(data_source):
 
 def main():
     try:
-        data_sources = [HigyrusDataSource(), MockDataSource()]
+        data_sources = [HigyrusDataSource(), MockDataSource(), BeCleverDataSource()]
 
         results = []
         for data_source in data_sources:

@@ -31,12 +31,16 @@ The application uses environment variables for configuration. Create a `.env` fi
 following variables:
 
 ```
-HIGYRUS_API_URL=https://your-higyrus-api-url.com/api
-HIGYRUS_API_USER=your_username
-HIGYRUS_API_PASSWORD=your_password
+HIGYRUS_API_URL=https://higyrus-api-url.com/api
+HIGYRUS_API_USER=username
+HIGYRUS_API_PASSWORD=password
+
+BECLEVER_DB_URL=mock://beclever-db
+BECLEVER_DB_USER=username
+BECLEVER_BB_PASSWORD=password
 ```
 
-Replace the values with your actual Higyrus API credentials.
+Replace the values with actual credentials.
 
 ## Usage
 
