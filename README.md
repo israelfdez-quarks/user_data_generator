@@ -32,13 +32,13 @@ The application uses environment variables for configuration. Create a `.env` fi
 following variables:
 
 ```
-HIGYRUS_API_URL=https://higyrus-api-url.com/api
-HIGYRUS_API_USER=username
-HIGYRUS_API_PASSWORD=password
+HIGYRUS_API_URL=https://api-url/
+HIGYRUS_API_USER=user
+HIGYRUS_API_PASSWORD=passwd
 
-BECLEVER_DB_URL=mock://beclever-db
-BECLEVER_DB_USER=username
-BECLEVER_BB_PASSWORD=password
+BECLEVER_DB_CONN_STR=DSN=some-ds-name
+
+AL2SYNC_DB_CONN_STR=DSN=some-other-ds-name
 ```
 
 Replace the values with actual credentials.

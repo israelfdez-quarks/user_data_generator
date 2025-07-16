@@ -1,5 +1,4 @@
 import os
-import random
 from typing import Dict, Any, Optional, List, Iterator
 
 from dotenv import load_dotenv
@@ -9,36 +8,79 @@ from data_sources.abstract import DataSource
 
 class BeCleverClient:
     """
-    Client for connecting to the BeClever database.
+    Client for connecting to the BeClever SQL Server database.
     """
 
-    def __init__(self, db_url: Optional[str] = None, db_user: Optional[str] = None,
-                 db_password: Optional[str] = None):
+    def __init__(self, db_conn_str: Optional[str] = None):
         load_dotenv()
 
-        self.db_url = db_url or os.getenv("BECLEVER_DB_URL") or "mock://beclever-db"
-        self.db_user = db_user or os.getenv("BECLEVER_DB_USER") or "mock_user"
-        self.db_password = db_password or os.getenv("BECLEVER_BB_PASSWORD") or "mock_password"
+        self.db_conn_str = db_conn_str or os.getenv("BECLEVER_DB_CONN_STR")
 
-        print(f"BeCleverClient initialized with URL: {self.db_url}")
-        print(f"Using mock data for BeClever database")
+        # Do not crash all if missing local dependencies
+        try:
+            import pyodbc
+            self._pyodbc = pyodbc
+        except ImportError:
+            self._pyodbc = None
+
+        print(f"BeCleverClient initialized with connection string")
 
     def query_users(self) -> List[Dict[str, Any]]:
-        # For now, generate mock data
-        mock_users = []
+        conn = self._pyodbc.connect(self.db_conn_str)
+        cursor = conn.cursor()
 
-        # Generate 10 mock users
-        for i in range(10):
-            user = {
-                "nombre": f"Nombre{i + 1}",
-                "apellido": f"Apellido{i + 1}",
-                "CUIT": f"20-{random.randint(10000000, 99999999)}-{random.randint(0, 9)}",
-                "email": f"usuario{i + 1}@example.com",
-                "telefono": f"+54 9 11 {random.randint(1000, 9999)}-{random.randint(1000, 9999)}"
-            }
-            mock_users.append(user)
+        query = """
+                select C.Nom                                as nombre,
+                       C.Ape + ' ' + C.Ape2                 as apellido,
+                       C.NumDoc                             as numeroDocumento,
+                       IIF(C.IdTipoCliente = 1, 'PF', 'PJ') as tipoPersona,
+                       C.PreFijCel + C.TelCel               as Movil,
+                       C.Mai                                as email,
+                       C.TelCel2                            as Movil2,
+                       C.Mai2                               as email2,
+                       C.FecAlt                             as created_at,
+                       C.NumDocFis                          as CUIT,
+                       C.Pep                                as pep,
+                       NAC.Des                              as nacionalidad,
+                       CADDR.Num                            as altura,
+                       CADDR.CodPos                         as codigoPostal,
+                       CADDR.Cal                            as calle,
+                       COUNTRY.Des                          as paisResidencia,
+                       PROV.Des                             as provincia,
+                       CT.IdCuenta                          as numeroCuentaAL2,
+                       ACC.CVU                              as AL2CVU,
+                       ACC.Ali                              as AL2Alias,
+                       CI.Nom + ' ' + CI.Nom2               as nombreApoderadoAL2,
+                       CI.Ape + ' ' + CI.Ape2               as apellidoApoderadoAL2,
+                       CI.NumDoc                            as numeroDocumentoApoderadoAL2,
+                       CI.NumDocFis                         as CUITApoderadoAL2,
+                       CI.Mai                               as emailApoderadoAL2,
+                       CI.TelCel                            as MovilApoderadoAL2
+                from CLIENTES C
+                         left join Nacionalidades NAC on C.IdNacionalidad = NAC.IdNacionalidad
+                         left join CLIENTESDOMICILIO CADDR
+                                   on C.IdCliente = CADDR.IdCliente and CADDR.IdTipoDomicilio = 1
+                         left join PAISES COUNTRY on CADDR.IdPais = COUNTRY.IdPais
+                         left join PROVINCIAS PROV on CADDR.IdProvincia = PROV.IdProvincia
+                         join CUENTAS CT on C.IdCliente = CT.IdCliente
+                         left join CUENTA_PRODUCTOS ACC on CT.IdCuenta = ACC.IdCuenta
+                         left join CUENTAINTERVINIENTES CI on CT.IdCuenta = CI.IdCuenta
+                ORDER BY C.NumDocFis
+                """
 
-        return mock_users
+        cursor.execute(query)
+
+        columns = [column[0] for column in cursor.description]
+        results = []
+
+        for row in cursor.fetchall():
+            user = {columns[i]: row[i] for i in range(len(columns))}
+            results.append(user)
+
+        cursor.close()
+        conn.close()
+
+        return results
 
 
 class BeCleverDataSource(DataSource):
@@ -68,9 +110,30 @@ class BeCleverDataSource(DataSource):
         columns = [
             "nombre",
             "apellido",
-            "CUIT",
+            "numeroDocumento",
+            "tipoPersona",
+            "Movil",
             "email",
-            "telefono",
+            "Movil2",
+            "email2",
+            "created_at",
+            "CUIT",
+            "pep",
+            "nacionalidad",
+            "altura",
+            "codigoPostal",
+            "calle",
+            "paisResidencia",
+            "provincia",
+            "numeroCuentaAL2",
+            "AL2CVU",
+            "AL2Alias",
+            "nombreApoderadoAL2",
+            "apellidoApoderadoAL2",
+            "numeroDocumentoApoderadoAL2",
+            "CUITApoderadoAL2",
+            "emailApoderadoAL2",
+            "MovilApoderadoAL2",
             "source"
         ]
 
