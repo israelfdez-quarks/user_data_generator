@@ -1,7 +1,7 @@
 [project]
 name = "users-data-generator"
 version = "0.1.0"
-description = "Generator for user data with Higyrus API integration"
+description = "Generator for user data from various ACA/AL2 data sources"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
