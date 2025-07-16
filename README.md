@@ -3,6 +3,7 @@
 A Python application that retrieves and processes user data from multiple sources, including:
 
 - Higyrus API.
+- BeClever
 - ??
 
 ## Installation
