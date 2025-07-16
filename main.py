@@ -4,15 +4,6 @@ from data_sources import HigyrusDataSource, MockDataSource, combine_data_sources
 def consume_data_source(data_source):
     print(f"\nConsuming {data_source.name} data source:")
 
-    items = []
-    for i, item in enumerate(data_source):
-        items.append(item)
-        if i < 2:  # Only show the first 2 items to avoid cluttering the output
-            print(f"  Item {i + 1}: {item}")
-        if i >= 2:
-            print(f"  ... and more items")
-            break
-
     result = data_source.to_dataframe()
 
     print(f"Converted to DataFrame with {len(result)} rows and {len(result.columns)} columns")
