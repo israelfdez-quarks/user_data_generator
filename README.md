@@ -11,7 +11,7 @@ A Python application that retrieves and processes user data from multiple source
 ### Prerequisites
 
 - Python 3.13 or higher
-- [uv](https://github.com/astral-sh/uv) (Python package installer)
+- [uv](https://github.com/astral-sh/uv) (An extremely fast Python package and project manager)
 
 ### Setup
 
