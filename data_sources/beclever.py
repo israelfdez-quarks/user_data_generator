@@ -59,7 +59,7 @@ class BeCleverClient:
                 from CLIENTES C
                          left join Nacionalidades NAC on C.IdNacionalidad = NAC.IdNacionalidad
                          left join CLIENTESDOMICILIO CADDR
-                                   on C.IdCliente = CADDR.IdCliente and CADDR.IdTipoDomicilio = 1
+                                   on C.IdCliente = CADDR.IdCliente and CADDR.IdTipoDomicilio = 1 -- Un cliente puede tener más de una dirección. 
                          left join PAISES COUNTRY on CADDR.IdPais = COUNTRY.IdPais
                          left join PROVINCIAS PROV on CADDR.IdProvincia = PROV.IdProvincia
                          join CUENTAS CT on C.IdCliente = CT.IdCliente

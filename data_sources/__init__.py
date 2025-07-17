@@ -12,13 +12,11 @@ from data_sources.al2sync import AL2SyncDataSource
 from data_sources.beclever import BeCleverDataSource
 # Export the concrete implementations
 from data_sources.higyrus import HigyrusDataSource
-from data_sources.mock import MockDataSource
 
 # Define what's available when using "from data_sources import *"
 __all__ = [
     'DataSource',
     'HigyrusDataSource',
-    'MockDataSource',
     'BeCleverDataSource',
     'AL2SyncDataSource',
     'combine_data_sources',
